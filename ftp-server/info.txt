@@ -1,0 +1,29 @@
+Docker FTP Server
+Supports passive mode. Based on Docker Pure-ftpd Server.
+
+Features
+Passive mode support with ports 30000-30009
+Public IP/hostname in $FTP_PUBLIC_HOST
+Can adjust connections limits via environmental variables
+Configuration and storage as Docker volumes
+Sample docker-compose.yml
+How to add user
+Uses virtual users (not real linux users).
+
+Open container terminal
+pure-pw useradd bob -u ftpuser -d /home/ftpusers/bob
+pure-pw mkdb
+No restart should be needed. More info on usage here: https://download.pureftpd.org/pure-ftpd/doc/README.Virtual-Users
+
+Connection test
+$ ftp -p localhost 21
+ftp> user bob
+ftp> ls
+Restoration from backup
+Container can be backed up and restored using dockup image. Stored files must have correct ownership ftpuser:ftpgroup, otherwise FTP write fails on permissions.
+
+get into the container docker exec -t [containerid] bash
+cd /home/ftpusers
+chown ftpuser:ftpgroup -R *
+Issues
+Does not support TLS (needs configuration)
